@@ -1,0 +1,16 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/env
+
+# testing
+/obj
+.vs
+
+# production
+get-pip.py
+app/__pycache__
+app/migrations
+StoreMon/__pycache__
+app/FE
+# misc
