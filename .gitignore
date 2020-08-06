@@ -5,7 +5,7 @@
 
 # testing
 /obj
-.vs
+.vscode
 requestlogs.log
 startup.txt
 
