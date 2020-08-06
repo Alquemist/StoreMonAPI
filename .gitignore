@@ -6,6 +6,8 @@
 # testing
 /obj
 .vs
+requestlogs.log
+startup.txt
 
 # production
 get-pip.py

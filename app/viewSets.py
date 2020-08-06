@@ -7,7 +7,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
-from django.db.models import F
+#from django.db.models import F
 from django.db.models import Max
 
 from .myFunctions import *
@@ -61,10 +61,10 @@ class AtributiViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def getattribs(self, request):
         itemID = request.GET.get('itemID')
-        #print('i am listing for:', itemID)
+        print('i am listing for:', itemID)
         queryset = Atributi.objects.filter(inventar__id=itemID)
         serializer = AtributiSerializer(queryset, many=True)
-        #print(serializer.data)
+        print(serializer.data)
         return Response(serializer.data)
 
     @action(methods=['post'], detail=False)
@@ -153,7 +153,6 @@ class SpecifikacijeViewSet(viewsets.ViewSet):
 
 
 class NaloziViewSet(viewsets.ModelViewSet):
-
     @action(methods=['post'], detail=False)
     def saveNalog(self, request):
         data = json.loads(request.body.decode('utf-8'))
@@ -175,7 +174,8 @@ class NaloziViewSet(viewsets.ModelViewSet):
     def getNalogList(self, request):
         queryData = json.loads(request.query_params.get("queryData"))
         statusDict = {0:"Izrađen", 1:"Odobren", 2:"U proizvodnji", 3:"Završeno"}
-        #print(queryData)
+        print('nalozilist', queryData)
+        
         def searchByItem(param):
             return Nalozi.objects.filter(proizvod__invBr=int(param))
             
@@ -227,14 +227,14 @@ class OtpremniceViewSet(viewsets.ViewSet):
             docBr = ''
         #print({'mjesta': mjesta, 'primaoci': primaoci, 'placanja':placanja, 'mjestaPrijema': mjestaPrijema, 'docBr':docBr})
         responseObj = {
-            'mjesto': mjesta.latest('mjesto') if len(mjesta) else '',
+            'mjesto': mjesta.latest('datum') if len(mjesta) else '',
             'mjesta': mjesta if len(mjesta) else [],
             'docBr': docBr,
-            'primaoc': primaoci.latest('primaoc') if len(primaoci) else '',
+            'primaoc': primaoci.latest('datum') if len(primaoci) else '',
             'primaoci': primaoci if len(primaoci) else [],
-            'mjestoPrijema': mjestaPrijema.latest('mjestoPrijema') if len(mjestaPrijema) else '',
+            'mjestoPrijema': mjestaPrijema.latest('datum') if len(mjestaPrijema) else '',
             'mjestaPrijema': mjestaPrijema if len(mjestaPrijema) else [],
-            'nacinPlacanja': placanja.latest('nacinPlacanja') if len(placanja) else '',
+            'nacinPlacanja': placanja.latest('datum') if len(placanja) else '',
             'naciniPlacanja': placanja if len(placanja) else [],
             }
         return Response(responseObj)
@@ -306,11 +306,11 @@ class MPViewSet(viewsets.ViewSet):
         return Response()
 
 
-class PreFetchingViewSet(viewsets.ViewSet):
+# class PreFetchingViewSet(viewsets.ViewSet):
     
-    @action(methods=['get'], detail=False)
-    def preFetchAll(self, request):
-        inv = Inventar.objects.all()#Inventar.objects.all().prefetch_related('atributi')#Inventar.objects.all()
-        serializer = InventarSerializeRelated(inv, many=True)
-        print(serializer)
-        return Response(serializer.data)
+#     @action(methods=['get'], detail=False)
+#     def preFetchAll(self, request):
+#         inv = Inventar.objects.all()#Inventar.objects.all().prefetch_related('atributi')#Inventar.objects.all()
+#         serializer = InventarSerializeRelated(inv, many=True)
+#         print(serializer)
+#         return Response(serializer.data)

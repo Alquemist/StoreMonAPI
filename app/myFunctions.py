@@ -1,14 +1,17 @@
+from app.models import Inventar
+from django.db.models import F
+
 def filterData(obj, keysForDel):
     return {key: obj[key] for key in obj.keys() if (key not in keysForDel)}
 
-def updInventar(id, promjenaKolicine):
+def updInventar(Inventar, id, promjenaKolicine):
     #print(id, promjenaKolicine)
     item = Inventar.objects.get(id=id)
     #print('227',item.kolicina, promjenaKolicine)
     item.kolicina = F('kolicina') + promjenaKolicine
     item.save()
 
-def insertPrimka(zapItem, primka):
+def insertPrimka(Inventar, zapItem, primka):
     #print(zapItem)
     item = Inventar.objects.get(id=zapItem['id'])
     if zapItem['poUlaznojJM']:
@@ -56,11 +59,6 @@ def InventarToRepresentation(self, obj):
         'invBr': str(obj.invBr),
         'kolicina': float(obj.kolicina),
         'tip': obj.tip,
-        'ziralMP': float(obj.ziralMP),
-        'gotovinaMP': float(obj.gotovinaMP),
-        'ziralVP': float(obj.ziralVP),
-        'gotovinaVP': float(obj.gotovinaVP),
-        'pdvStopa': float(obj.pdvStopa),
         'JMIzlaz': obj.JMIzlaz,
         'JMOdnos': float(obj.JMOdnos),
         'JMUlaz': obj.JMUlaz,
@@ -73,11 +71,6 @@ def InventarToInternalValue(self, obj):
         'invBr': int(obj['invBr']),
         'kolicina': obj['kolicina'],
         'tip': obj['tip'],
-        'ziralMP': obj['ziralMP'],
-        'gotovinaMP': obj['gotovinaMP'],
-        'ziralVP': obj['ziralVP'],
-        'gotovinaVP': obj['gotovinaVP'],
-        'pdvStopa': obj['pdvStopa'],
         'JMIzlaz': obj['JMIzlaz'],
         'JMOdnos': obj['JMOdnos'],
         'JMUlaz': obj['JMUlaz']

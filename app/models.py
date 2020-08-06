@@ -36,11 +36,6 @@ class Inventar(MetaModel):
     JMUlaz = models.CharField(max_length=50, blank=False)
     JMIzlaz = models.CharField(max_length=50, blank=False)
     JMOdnos = models.DecimalField(max_digits=16, decimal_places=5, blank=False)
-    ziralMP = models.DecimalField(max_digits=16, decimal_places=5)
-    gotovinaMP = models.DecimalField(max_digits=16, decimal_places=5)
-    ziralVP = models.DecimalField(max_digits=16, decimal_places=5)
-    gotovinaVP = models.DecimalField(max_digits=16, decimal_places=5)
-    pdvStopa = models.DecimalField(max_digits=4, decimal_places=2, default=17) # [%]
     atributi = models.ManyToManyField(Atributi)
     izrada = models.ManyToManyField('SpecifikacijeIzrade')
 

@@ -1,3 +1,4 @@
 django >=1.9, <2
 djangorestframeworks==3.9.1
 django-cors-headers==2.4.0
+jango-requestlogs==0.2.1

@@ -10,5 +10,5 @@ router.register(prefix='specs', viewset=SpecifikacijeViewSet, basename='Specifik
 router.register(prefix='nalozi', viewset=NaloziViewSet, basename='Nalozi')
 router.register(prefix='otpremnice', viewset=OtpremniceViewSet, basename='Otpremnica')
 router.register(prefix='MP', viewset=MPViewSet, basename='MPHeader')
-router.register(prefix='preFetch', viewset=PreFetchingViewSet, basename='Inventar')
+# router.register(prefix='preFetch', viewset=PreFetchingViewSet, basename='Inventar')
 
