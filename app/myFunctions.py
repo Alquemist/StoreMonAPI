@@ -1,18 +1,18 @@
-from app.models import Inventar
+from app.models import Inventar, Primka
 from django.db.models import F
 
 def filterData(obj, keysForDel):
     return {key: obj[key] for key in obj.keys() if (key not in keysForDel)}
 
-def updInventar(Inventar, id, promjenaKolicine):
+def updInventar(id, promjenaKolicine):
     #print(id, promjenaKolicine)
     item = Inventar.objects.get(id=id)
     #print('227',item.kolicina, promjenaKolicine)
     item.kolicina = F('kolicina') + promjenaKolicine
     item.save()
 
-def insertPrimka(Inventar, zapItem, primka):
-    #print(zapItem)
+def insertPrimka(zapItem, primka):
+    print(zapItem)
     item = Inventar.objects.get(id=zapItem['id'])
     if zapItem['poUlaznojJM']:
         zapItem['zapKolicina'] = float(zapItem['zapKolicina'])*float(item.JMOdnos)
@@ -75,3 +75,4 @@ def InventarToInternalValue(self, obj):
         'JMOdnos': obj['JMOdnos'],
         'JMUlaz': obj['JMUlaz']
     }
+

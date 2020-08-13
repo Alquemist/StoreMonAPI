@@ -32,10 +32,11 @@ class InventarViewSet(viewsets.ModelViewSet):
 
     @action(methods=['delete'], detail=False)
     def deleteItem(self, request):
-        itemId = json.loads(request.body.decode('utf-8'))
-        Atributi.objects.filter(inventar__id=itemId).delete()
-        SpecifikacijeIzrade.objects.filter(inventar__id=itemId).delete()
-        Inventar.objects.get(id=itemId).delete()
+        item = json.loads(request.body.decode('utf-8'))['id']
+        print('id', item)
+        Atributi.objects.filter(inventar__id=item).delete()
+        SpecifikacijeIzrade.objects.filter(inventar__id=item).delete()
+        Inventar.objects.get(id=item).delete()
         return Response()
     
     @action(methods=['get'], detail=False)
@@ -99,7 +100,6 @@ class PrimkaViewSet(viewsets.ViewSet):
     
     @action(methods=['get'], detail=False)
     def getData(self, request):
-        print('getPrimka')
         mjesta = Primka.objects.values().distinct().values_list('mjesto', flat=True)
         dobavljaci = Primka.objects.values().distinct().values_list('dobavljac', flat=True)
         placanja = Primka.objects.values().distinct().values_list('nacinPlacanja', flat=True)
@@ -108,16 +108,26 @@ class PrimkaViewSet(viewsets.ViewSet):
         except Exception:
             docBr = ''
         #print(mjesta, dobavljaci, placanja, docBr)
-        return Response({'mjesta': mjesta, 'dobavljaci': dobavljaci, 'placanja':placanja, 'docBr':docBr})
+        return Response({
+            'mjesta': mjesta,
+            'mjesto': mjesta.latest('id') if len(mjesta) else '',
+            'dobavljaci': dobavljaci,
+            'dobavljac': dobavljaci.latest('id') if len(dobavljaci) else '',
+            'placanja': placanja, 
+            'placanje': placanja.latest('id') if len(placanja) else '',
+            'docBr':docBr,
+            })
 
     @action(methods=['post'], detail=False)
     def zaprimanje(self, request):
         data = json.loads(request.body.decode('utf-8'))
         header = data['header']
         zapItems = data['items']
-        #print('header:', header)
+        #print('data:', data)
         primka = Primka.objects.create(**header)
+        #print('primksa:', primka)
         [insertPrimka(zapItem, primka) for zapItem in zapItems]
+        
         return Response()
 
 
@@ -160,10 +170,10 @@ class NaloziViewSet(viewsets.ModelViewSet):
         item = Inventar.objects.get(id=itemId)
         nalog = data['nalog']
         nalog.update({'proizvod': item})
-        #print(itemId, nalog)
+        print(itemId, nalog)
         try:
-            Nalozi.objects.create(**nalog)
-            return Response()
+            resp = Nalozi.objects.create(**nalog)
+            return Response(resp.id)
         except Exception as err:
             response = Response(err.args, status=status.HTTP_400_BAD_REQUEST)
             if err.args[0]==1062:
@@ -174,8 +184,8 @@ class NaloziViewSet(viewsets.ModelViewSet):
     def getNalogList(self, request):
         queryData = json.loads(request.query_params.get("queryData"))
         statusDict = {0:"Izrađen", 1:"Odobren", 2:"U proizvodnji", 3:"Završeno"}
-        print('nalozilist', queryData)
-        
+        latestNalogBr = Nalozi.objects.latest('id').docBr
+        #print('nalozilist', queryData)
         def searchByItem(param):
             return Nalozi.objects.filter(proizvod__invBr=int(param))
             
@@ -187,13 +197,14 @@ class NaloziViewSet(viewsets.ModelViewSet):
             queryset = switch.get(list(queryData.keys())[0])(list(queryData.values())[0])
             #print(queryset)
             serializer = NaloziSerializer(queryset, many=True)
-            return Response({'naloziList': serializer.data, 'statusDict': statusDict})
+            return Response({'naloziList': serializer.data, 'statusDict': statusDict, 'docBr': latestNalogBr})
         else:
-            return Response({'naloziList': [], 'statusDict': statusDict})
+            return Response({'naloziList': [], 'statusDict': statusDict, 'docBr': latestNalogBr})
     
     @action(methods=['patch'], detail=False)
     def updateNalog(self, request):                                 #statusList = {"Izrađen":0, "Odobren":1, "U proizvodnji":2, "Završeno":3}
         data = json.loads(request.body.decode('utf-8'))
+        print(data)
         nalog = Nalozi.objects.get(id=data['id'])
         #print('status naloga', data['status'])
         def updNalog():

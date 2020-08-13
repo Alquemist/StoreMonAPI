@@ -23,7 +23,7 @@ class CustomAuthToken(ObtainAuthToken):
         #print('user:', get_user_permissions(user))
         return Response({
             'token': token.key,
-            'user_id': u_ser.pk,
+            'userID': u_ser.pk,
             'email': u_ser.email,
             'ime': u_ser.first_name,
             'prezime': u_ser.last_name,
