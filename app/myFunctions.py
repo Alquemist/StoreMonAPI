@@ -14,8 +14,6 @@ def updInventar(id, promjenaKolicine):
 def insertPrimka(zapItem, primka):
     print(zapItem)
     item = Inventar.objects.get(id=zapItem['id'])
-    if zapItem['poUlaznojJM']:
-        zapItem['zapKolicina'] = float(zapItem['zapKolicina'])*float(item.JMOdnos)
     zapItem = {
         'item': item,
         'zapKolicina': float(zapItem['zapKolicina'])*float(item.JMOdnos) if zapItem['poUlaznojJM'] else zapItem['zapKolicina'],
@@ -24,13 +22,14 @@ def insertPrimka(zapItem, primka):
         'rabat': zapItem.get('rabat'),
         'ukupno': zapItem.get('ukupno')
         }
-    #print(zapItem)
+    print('zapItem:',zapItem)
     try:
         item.kolicina = F('kolicina')+zapItem['zapKolicina']
         item.save()
         primka.zaprimljeno.create(**zapItem)
     except Exception as err:
         print(err.args)
+
 
 def insertOtpremnica(hdr, otpremnica):
     if not otpremnica['poIzlaznojJM']:

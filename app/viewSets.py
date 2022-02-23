@@ -123,11 +123,9 @@ class PrimkaViewSet(viewsets.ViewSet):
         data = json.loads(request.body.decode('utf-8'))
         header = data['header']
         zapItems = data['items']
-        #print('data:', data)
+        print('data:', data)
         primka = Primka.objects.create(**header)
-        #print('primksa:', primka)
         [insertPrimka(zapItem, primka) for zapItem in zapItems]
-        
         return Response()
 
 
