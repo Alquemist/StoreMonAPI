@@ -2,7 +2,7 @@
 Definition of views.
 """
 
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse
 from django.template import RequestContext
 from rest_framework.response import Response

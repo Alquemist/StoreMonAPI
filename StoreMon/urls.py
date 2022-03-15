@@ -3,7 +3,7 @@ Definition of urls for StoreMon.
 """
 
 from datetime import datetime
-from django.conf.urls import url
+from django.urls import include, re_path
 import django.contrib.auth.views
 from rest_framework.authtoken import views as auth_views
 
@@ -22,13 +22,13 @@ from .loginAPI import CustomAuthToken
 
 urlpatterns = [
     # Examples:
-    url(r'^$', app.views.reactRoot),
-    url(r'^service-worker.js', app.views.sw),
-    # url(r'^contact$', app.views.contact, name='contact'),
-    # url(r'^about$', app.views.about, name='about'),
-    url(r'^admin/', admin.site.urls),
-    url(r'^login/$',
-        django.contrib.auth.views.LoginView,
+    re_path(r'^$', app.views.reactRoot),
+    re_path(r'^service-worker.js', app.views.sw),
+    # re_path(r'^contact$', app.views.contact, name='contact'),
+    # re_path(r'^about$', app.views.about, name='about'),
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^login/$',
+        django.contrib.auth.views.LoginView.as_view(),
         {
             'template_name': 'app/login.html',
             'authentication_form': app.forms.BootstrapAuthenticationForm,
@@ -39,8 +39,8 @@ urlpatterns = [
             }
         },
         name='login'),
-    url(r'^logout$',
-        django.contrib.auth.views.LogoutView,
+    re_path(r'^logout$',
+        django.contrib.auth.views.LogoutView.as_view(),
         {
             'next_page': '/',
         },

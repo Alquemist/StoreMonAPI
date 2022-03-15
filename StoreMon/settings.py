@@ -106,7 +106,7 @@ STATICFILES_DIRS = [
     os.path.join(FRONTEND_DIR, 'static')
 ]
 
-WSGI_APPLICATION = 'StoreMon.wsgi.application'
+#WSGI_APPLICATION = 'StoreMon.wsgi.application'
 
 REST_FRAMEWORK = {
    'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -130,7 +130,8 @@ CORS_ALLOW_METHODS = default_methods + (
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': 'db_server',  
         'NAME': 'storemon',
         'USER': 'storemon',
         'PASSWORD': 'storemon1234',

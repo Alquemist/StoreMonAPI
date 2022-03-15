@@ -23,12 +23,14 @@ class MetaModel(models.Model):
 #        abstract = True
 
 class Atributi(MetaModel):
+    id = models.AutoField(primary_key=True)
     naziv = models.CharField(max_length=50)
     vrijednost = models.CharField(max_length=50)
     tip = models.CharField(max_length=10)
 
 
 class Inventar(MetaModel):
+    id = models.AutoField(primary_key=True)
     naziv = models.CharField(max_length=50)
     invBr = models.IntegerField(blank=False, unique=True) 
     kolicina = models.DecimalField(max_digits=16, decimal_places=5, validators=[MinValueValidator(0)]) #[JMIzlaz]
@@ -41,6 +43,7 @@ class Inventar(MetaModel):
 
 
 class Primka(MetaModel):
+    id = models.AutoField(primary_key=True)
     datum = models.DateField()
     docBr = models.CharField(max_length=50)
     mjesto = models.CharField(max_length=50)
@@ -51,6 +54,7 @@ class Primka(MetaModel):
 
 
 class Zaprimljeno(MetaModel):
+    id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Inventar, blank=False, on_delete=models.CASCADE)
     zapKolicina = models.DecimalField(max_digits=16, decimal_places=5, blank=False) #po izlaznoj JM
     vrijednost = models.DecimalField(max_digits=16, decimal_places=5)
@@ -60,6 +64,7 @@ class Zaprimljeno(MetaModel):
 
 
 class SpecifikacijeIzrade(MetaModel):
+    id = models.AutoField(primary_key=True)
     materijal = models.ForeignKey(Inventar, on_delete=models.CASCADE)
     dimenzije = models.TextField() #'[d1,d2,d3]'
     kolicina = models.DecimalField(max_digits=16, decimal_places=5)
@@ -69,6 +74,7 @@ class SpecifikacijeIzrade(MetaModel):
 
 
 class Nalozi(MetaModel):
+    id = models.AutoField(primary_key=True)
     proizvod = models.ForeignKey(Inventar, on_delete=models.CASCADE)
     docBr = models.CharField(max_length=50, blank=False, unique=True)
     datum = models.DateField(blank=False)
@@ -78,6 +84,7 @@ class Nalozi(MetaModel):
 
 
 class Otpremnica(MetaModel):
+    id = models.AutoField(primary_key=True)
     datum = models.DateField(blank=False)
     docBr = models.CharField(blank=False, max_length=50, unique=True)
     mjesto = models.CharField(blank=False, max_length=50)
@@ -89,6 +96,7 @@ class Otpremnica(MetaModel):
 
 
 class Otpremljeno(MetaModel):
+    id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Inventar, blank=False, on_delete=models.CASCADE)
     otprKolicina = models.DecimalField(max_digits=16, decimal_places=5, blank=False)
     osnovnaCijena = models.DecimalField(max_digits=16, decimal_places=5, blank=False)
@@ -98,6 +106,7 @@ class Otpremljeno(MetaModel):
 
 
 class MPHeader(MetaModel):
+    id = models.AutoField(primary_key=True)
     datum = models.DateField(blank=False)
     docBr = models.CharField(blank=False, max_length=50, unique=True)
     mjesto = models.CharField(blank=False, max_length=50)
@@ -110,6 +119,7 @@ class MPHeader(MetaModel):
 
 
 class MPItemList(MetaModel):
+    id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Inventar, blank=False, on_delete=models.CASCADE)
     otprKolicina = models.DecimalField(max_digits=16, decimal_places=5, blank=False)
     korekcijaG = models.DecimalField(max_digits=16, decimal_places=5) #[%]
